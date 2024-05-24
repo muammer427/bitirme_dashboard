@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./chartBox.scss";
-import {LineChart, ResponsiveContainer, Tooltip } from "recharts";
+import { LineChart, ResponsiveContainer, Tooltip } from "recharts";
 
 type Props = {
   color: string;
@@ -8,6 +8,7 @@ type Props = {
   title: string;
   dataKey: string;
   number: number | string;
+  route: string; 
 };
 
 const ChartBox = (props: Props) => {
@@ -19,7 +20,7 @@ const ChartBox = (props: Props) => {
           <span>{props.title}</span>
         </div>
         <h1>{props.number}</h1>
-        <Link to="/" style={{ color: props.color }}>
+        <Link to={props.route} style={{ color: props.color }}>
           Hepsini Göster
         </Link>
       </div>

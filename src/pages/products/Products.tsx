@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./Products.scss";
 import DataTable from "../../components/dataTable/DataTable";
-import Add from "../../components/add/Add";
+import Add from "../../components/add/AddProduct";
 import { GridColDef } from "@mui/x-data-grid";
-import { products } from "../../data";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -33,10 +33,9 @@ const columns: GridColDef[] = [
     width: 200,
     type: "string",
   },
-  
   {
     field: "productcode",
-    type: "number",
+    type: "string",
     headerName: "Ürün Kodu",
     width: 200,
   },
@@ -53,10 +52,10 @@ const columns: GridColDef[] = [
     type: "string",
   },
   {
-    field: "Stock",
+    field: "stock",
     headerName: "Stok Miktarı",
     width: 150,
-    type: "integer",
+    type: "number",
   },
   {
     field: "desi",
@@ -92,8 +91,7 @@ const columns: GridColDef[] = [
     field: "vatrate",
     headerName: "KDV Oranı",
     width: 200,
-    type: 'singleSelect',
-    valueOptions: ['0', '5', '10','15','20']
+    type: "string",
   },
   {
     field: "categoriAttributes",
@@ -105,13 +103,28 @@ const columns: GridColDef[] = [
 
 const Products = () => {
   const [open, setOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      console.log('Fetching products from the server...');
+      try {
+        const response = await axios.get('http://localhost:5000/products');
+        console.log('Products fetched:', response.data);
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   return (
     <div className="products">
       <div className="info">
         <h1>Ürünler</h1>
         <button onClick={() => setOpen(true)}>Yeni ürün ekle</button>
-        <button onClick={() => setOpen(true)}>Yayınla</button>
       </div>
       <DataTable slug="Ürünler" columns={columns} rows={products} />
       

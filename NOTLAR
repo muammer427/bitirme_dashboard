@@ -1,4 +1,0 @@
-eğer yan menüde bir route değişikliği istersem önce app.tsx de ekleme yapıyorum path yazdığım kısmı data.ts menu kısmında url kısmına yazıyorum
-
-bu versiyonda calendar yapılacak
-ürünlerin type kısımları düzgün ayarlanacak. checkbox olacak kısımlar içi doldurulacak. setting pop up ayarlanacak. 

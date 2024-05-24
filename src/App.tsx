@@ -8,8 +8,7 @@ import Menu from "./components/menu/Menu";
 import "./styles/global.scss";
 import User from "./pages/magaza/magaza";
 import Product from "./pages/product/Product";
-import Notes from "./pages/notlar/notlar";
-import Gallery  from "./pages/gallery/gallery";
+import Notes from "./pages/notlar/notlar"
 import {
   QueryClient,
   QueryClientProvider,
@@ -48,7 +47,7 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/users",
+          path: "/magazalar",
           element: <Users />,
         },
         {
@@ -66,10 +65,6 @@ function App() {
         {
           path: "/notes",
           element: <Notes />,
-        },
-        {
-          path: "/gallery",
-          element: <Gallery />,
         },
       
       ],

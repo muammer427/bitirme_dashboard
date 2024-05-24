@@ -17,6 +17,7 @@ const DataTable = (props: Props) => {
 
 
   const handleDelete = (id: number) => {
+    console.log("show: ",id);
     //delete the item
     // mutation.mutate(id)
   };
@@ -26,6 +27,7 @@ const DataTable = (props: Props) => {
     headerName: "Action",
     width: 200,
     renderCell: (params) => {
+      //console.log("id: ",params.row.id);
       return (
         <div className="action">
           <Link to={`/${props.slug}/${params.row.id}`}>
@@ -48,7 +50,7 @@ const DataTable = (props: Props) => {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10,
+              pageSize: 5,
             },
           },
         }}

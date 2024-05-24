@@ -1,13 +1,12 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../../components/dataTable/DataTable";
 import "./magazalar.scss";
-import { useState } from "react";
-import Add from "../../components/add/Add";
-import { userRows } from "../../data";
+import DataTable from "../../components/dataTable/DataTable";
+import Add from "../../components/add/AddMagaza";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
-  
   {
     field: "MagazaIsim",
     type: "string",
@@ -34,20 +33,36 @@ const columns: GridColDef[] = [
   },
 ];
 
-const Users = () => {
+
+const Magazalar = () => {
   const [open, setOpen] = useState(false);
+  const [magazalar, setMagazalar] = useState([]);
+
+  useEffect(() => {
+    const fetchMagazalar = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/magazalar');
+        console.log('Magazalar fetched:', response.data);
+        setMagazalar(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchMagazalar();
+  }, []);
 
   return (
-    <div className="users">
+    <div className="products">
       <div className="info">
         <h1>Mağazalar</h1>
-        <button onClick={() => setOpen(true)}>Mağaza ekle</button>
+        <button onClick={() => setOpen(true)}>Yeni Mağaza ekle</button>
       </div>
-      <DataTable slug="mağazalar" columns={columns} rows={userRows} />
-    
-      {open && <Add slug="Mağaza" columns={columns} setOpen={setOpen} />}
+      <DataTable slug="magazalar" columns={columns} rows={magazalar} />
+      
+      {open && <Add slug="magaza" columns={columns} setOpen={setOpen} />}
     </div>
   );
 };
 
-export default Users;
+export default Magazalar;
