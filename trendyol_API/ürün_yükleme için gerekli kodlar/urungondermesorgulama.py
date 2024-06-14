@@ -25,7 +25,7 @@ api_key = 'rsBHmEiBBitroVb4yXSt'
 api_secret = 'ConmRKqRFud4910EvX4M'
 
 # Batch request ID
-batch_request_id = 'b63e4e46-ed99-452a-9242-6d4448d8313d-1715776061'
+batch_request_id = 'e69f0d81-f788-4c92-a568-88793b4a3e86-1718292974'
 
 # GET isteği yap
 response = get_batch_request(api_key, api_secret, supplier_id, batch_request_id)

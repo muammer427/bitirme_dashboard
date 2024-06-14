@@ -1,3 +1,4 @@
+# json dosyasını trendyola yükleme
 import requests
 import json
 

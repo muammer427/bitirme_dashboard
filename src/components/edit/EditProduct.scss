@@ -63,16 +63,4 @@
       }
     }
   }
-
-  .notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #4caf50; /* Green background */
-    color: white;
-    padding: 15px;
-    border-radius: 4px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
 }

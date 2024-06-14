@@ -1,25 +1,38 @@
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import React from "react";
+import { GridColDef, GridToolbar, DataGrid, GridRowModel } from "@mui/x-data-grid";
+import axios from "axios";
 import "./dataTable.scss";
-
-import { Link } from "react-router-dom";
 
 type Props = {
   columns: GridColDef[];
-  rows: object[];
+  rows: any[];
   slug: string;
+  refreshData: () => void;
+  setEditData: (data: any) => void;
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const DataTable = (props: Props) => {
+const DataTable: React.FC<Props> = ({ columns, rows, refreshData, setEditData, setOpenEdit }) => {
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5000/products/${id}`);
+      console.log("Item deleted successfully");
+      refreshData(); // Refresh data after deletion
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
 
-
-  const handleDelete = (id: number) => {
-    console.log("show: ",id);
-    //delete the item
-    // mutation.mutate(id)
+  const handleRowEdit = async (newRow: GridRowModel) => {
+    const { id, ...updatedFields } = newRow;
+    try {
+      await axios.put(`http://localhost:5000/products/${id}`, updatedFields);
+      console.log("Item updated successfully");
+      refreshData(); // Refresh data after update
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
+    return newRow;
   };
 
   const actionColumn: GridColDef = {
@@ -27,14 +40,14 @@ const DataTable = (props: Props) => {
     headerName: "Action",
     width: 200,
     renderCell: (params) => {
-      //console.log("id: ",params.row.id);
       return (
         <div className="action">
-          <Link to={`/${props.slug}/${params.row.id}`}>
-            <img src="/view.svg" alt="" />
-          </Link>
+          
+          <div className="edit" onClick={() => { setEditData(params.row); setOpenEdit(true); }}>
+          <img src="/view.svg" alt="View" />
+          </div>
           <div className="delete" onClick={() => handleDelete(params.row.id)}>
-            <img src="/delete.svg" alt="" />
+            <img src="/delete.svg" alt="Delete" />
           </div>
         </div>
       );
@@ -45,8 +58,8 @@ const DataTable = (props: Props) => {
     <div className="dataTable">
       <DataGrid
         className="dataGrid"
-        rows={props.rows}
-        columns={[...props.columns, actionColumn]}
+        rows={rows}
+        columns={[...columns, actionColumn]}
         initialState={{
           pagination: {
             paginationModel: {
@@ -67,6 +80,10 @@ const DataTable = (props: Props) => {
         disableColumnFilter
         disableDensitySelector
         disableColumnSelector
+        processRowUpdate={handleRowEdit}
+        onProcessRowUpdateError={(error) => {
+          console.error("Error processing row update:", error);
+        }}
       />
     </div>
   );

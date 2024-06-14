@@ -3,7 +3,9 @@ import axios from "axios";
 import "./Products.scss";
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/AddProduct";
+import Edit from "../../components/edit/EditProduct";
 import { GridColDef } from "@mui/x-data-grid";
+
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -103,21 +105,21 @@ const columns: GridColDef[] = [
 
 const Products = () => {
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [products, setProducts] = useState([]);
+  const [editData, setEditData] = useState({});
+
+  const refreshData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/products');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      console.log('Fetching products from the server...');
-      try {
-        const response = await axios.get('http://localhost:5000/products');
-        console.log('Products fetched:', response.data);
-        setProducts(response.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
-    fetchProducts();
+    refreshData();
   }, []);
 
   return (
@@ -126,9 +128,17 @@ const Products = () => {
         <h1>Ürünler</h1>
         <button onClick={() => setOpen(true)}>Yeni ürün ekle</button>
       </div>
-      <DataTable slug="Ürünler" columns={columns} rows={products} />
+      <DataTable 
+        slug="products"
+        columns={columns} 
+        rows={products} 
+        refreshData={refreshData}
+        setEditData={setEditData}
+        setOpenEdit={setOpenEdit}
+      />
       
       {open && <Add slug="Ürün" columns={columns} setOpen={setOpen} />}
+      {openEdit && <Edit slug="Ürün" columns={columns} setOpen={setOpenEdit} editData={editData} refreshData={refreshData} />}
     </div>
   );
 };

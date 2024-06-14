@@ -1,7 +1,6 @@
-import Note from "../../components/notes/notes"
+import Note from "../../components/notes/notes";
 
 const Notes = () => {
-
   return (
     <div className="notes">
       <Note/>
@@ -9,4 +8,4 @@ const Notes = () => {
   )
 }
 
-export default Notes
+export default Notes;

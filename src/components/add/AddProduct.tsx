@@ -11,6 +11,7 @@ type Props = {
 
 const Add = (props: Props) => {
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [notification, setNotification] = useState<string | null>(null); // State for notification
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,8 +28,14 @@ const Add = (props: Props) => {
       const addProductResponse = await axios.post('http://localhost:5000/add-product', formData);
       console.log("Data saved successfully:", addProductResponse.data);
 
-      // Close the modal
-      props.setOpen(false);
+      // Set notification
+      setNotification("Product added successfully!");
+
+      // Close the modal after a short delay to show the notification
+      setTimeout(() => {
+        props.setOpen(false);
+        setNotification(null); // Clear notification after modal is closed
+      }, 2000);
     } catch (error) {
       console.error("Error saving data", error);
     }
@@ -58,6 +65,7 @@ const Add = (props: Props) => {
           <button type="submit">Gönder</button>
         </form>
       </div>
+      {notification && <div className="notification">{notification}</div>}
     </div>
   );
 };

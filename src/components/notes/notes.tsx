@@ -1,12 +1,10 @@
-// Notes.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import './Notes.scss';
 
 interface Note {
   id: number;
-  title: string;
-  text: string;
+  notbaslik: string;
+  nottext: string;
   isEditing: boolean;
 }
 
@@ -15,32 +13,74 @@ const Notes: React.FC = () => {
   const [noteTitle, setNoteTitle] = useState<string>('');
   const [noteText, setNoteText] = useState<string>('');
 
-  const handleAddNote = (e: React.FormEvent) => {
-    e.preventDefault(); 
-    if (noteTitle.trim() && noteText.trim()) {
-      const newNote = { id: Date.now(), title: noteTitle, text: noteText, isEditing: false };
-      setNotes([...notes, newNote]);
-      setNoteTitle('');
-      setNoteText('');
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = async () => {
+    try {
+      const response = await fetch('/api/notes');
+      const data = await response.json();
+      setNotes(data.map((note: any) => ({ ...note, isEditing: false })));
+    } catch (error) {
+      console.error('Error fetching notes:', error);
     }
   };
 
-  const handleDeleteNote = (id: number) => {
-    setNotes(notes.filter(note => note.id !== id));
+  const handleAddNote = async (e: FormEvent) => {
+    e.preventDefault();
+    if (noteTitle.trim() && noteText.trim()) {
+      try {
+        const response = await fetch('/api/notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ notbaslik: noteTitle, nottext: noteText }),
+        });
+        const data = await response.json();
+        setNotes([...notes, { ...data, isEditing: false }]);
+        setNoteTitle('');
+        setNoteText('');
+      } catch (error) {
+        console.error('Error adding note:', error);
+      }
+    }
+  };
+
+  const handleDeleteNote = async (id: number) => {
+    try {
+      await fetch(`/api/notes/${id}`, { method: 'DELETE' });
+      setNotes(notes.filter(note => note.id !== id));
+    } catch (error) {
+      console.error('Error deleting note:', error);
+    }
   };
 
   const handleEditNote = (id: number) => {
     setNotes(notes.map(note => (note.id === id ? { ...note, isEditing: !note.isEditing } : note)));
   };
 
-  const handleSaveNote = (id: number, newTitle: string, newText: string) => {
-    setNotes(notes.map(note => (note.id === id ? { ...note, title: newTitle, text: newText, isEditing: false } : note)));
+  const handleSaveNote = async (id: number, newTitle: string, newText: string) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notbaslik: newTitle, nottext: newText }),
+      });
+      const data = await response.json();
+      setNotes(notes.map(note => (note.id === id ? { ...data, isEditing: false } : note)));
+    } catch (error) {
+      console.error('Error updating note:', error);
+    }
   };
 
   return (
     <div className="notes-container">
       <h1>Notlarım</h1>
-      <form onSubmit={handleAddNote}> {/* Wrap input fields and button in a form */}
+      <form onSubmit={handleAddNote}>
         <div className="note-input">
           <input
             type="text"
@@ -54,7 +94,7 @@ const Notes: React.FC = () => {
             onChange={(e) => setNoteText(e.target.value)}
             placeholder="Not içeriği"
           />
-          <button type="submit">Add Note</button> {/* Change button type to submit */}
+          <button type="submit">Add Note</button>
         </div>
       </form>
       <ul className="notes-list">
@@ -64,19 +104,19 @@ const Notes: React.FC = () => {
               <div className="note-content">
                 <input
                   type="text"
-                  defaultValue={note.title}
-                  onBlur={(e) => handleSaveNote(note.id, e.target.value, note.text)}
+                  defaultValue={note.notbaslik}
+                  onBlur={(e) => handleSaveNote(note.id, e.target.value, note.nottext)}
                 />
                 <input
                   type="text"
-                  defaultValue={note.text}
-                  onBlur={(e) => handleSaveNote(note.id, note.title, e.target.value)}
+                  defaultValue={note.nottext}
+                  onBlur={(e) => handleSaveNote(note.id, note.notbaslik, e.target.value)}
                 />
               </div>
             ) : (
               <div className="note-content">
-                <strong>{note.title}</strong>
-                <p>{note.text}</p>
+                <strong>{note.notbaslik}</strong>
+                <p>{note.nottext}</p>
               </div>
             )}
             <div className="note-actions">
