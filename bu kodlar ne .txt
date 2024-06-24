@@ -1,0 +1,25 @@
+1.py = veri tabanındaki ürünleri trendyol isteğine göre sıralı products.json dosyasına yazıyor
+
+product.json=veri tabanındaki ürünler
+
+deneme.py trendyol ürün silme
+
+2.py = trendyola ürün ekleme güncellenen veri tabanından çekilen ürünleri ekliyor aynıları eklenmiyor
+
+3.py = trendyoldan ürünleri güncelleme aynı json üzerinden değişikleri gönderiyor
+
+4.py = veri tabanından sadece ürün fiyatı ve stok adetini çekiyor
+
+5.py = cekilen json dosyasındaki bilgileri trendyoldan güncelliyor
+
+products.json = ürünleri veritabanına yazıyor ve çekiyor ve güncelliyor ve yukarıdaki kodları çekip doğru yerlerde trendyoldada aynısını yapıyor
+
+addproduct.tsx kurcaladım hatırlamıyom
+
+edit = ürün güncelleme
+
+data tableda bişeyler değiştirdim hatırlamıyom
+
+pages/products.tsx kurcaladım
+
+hepsi bu sanırım kodu gitteki önceki koddan çektim info yazıları eksik olabilir
